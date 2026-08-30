@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>System Bot • Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-page: #b4c6ff;
+      --navy-900: #0b1329;
+      --navy-800: #101c3d;
+      --navy-700: #172854;
+      --navy-600: #20356d;
+      --border-subtle: #243b78;
+      --border-hover: #3b579d;
+      --text-white: #ffffff;
+      --text-gray: #9bb0e0;
+      --periwinkle: #b4c6ff;
+      --status-green: #22c55e;
+      --status-red: #ef4444;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Clean, Static Subtle Background Shapes */
+    .bg-shape-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bg-shape {
+      position: absolute;
+      opacity: 0.12;
+      user-select: none;
+    }
+
+    .shape-top-right {
+      top: -40px;
+      right: -40px;
+      width: 320px;
+      height: 320px;
+    }
+
+    .shape-bottom-left {
+      bottom: -60px;
+      left: -60px;
+      width: 380px;
+      height: 380px;
+    }
+
+    /* Main Container */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 16px 14px 60px 14px;
+    }
+
+    /* Compact Header Banner */
+    .banner-card {
+      max-width: 400px;
+      margin: 0 auto 16px auto;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--bg-page);
+      border: 1px solid rgba(16, 28, 61, 0.2);
+      box-shadow: 0 4px 12px rgba(16, 28, 61, 0.1);
+    }
+
+    .banner-img {
+      width: 100%;
+      height: auto;
+      max-height: 95px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .banner-footer {
+      padding: 8px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--navy-800);
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .bot-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bot-pfp {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1.5px solid var(--periwinkle);
+      background: var(--navy-900);
+    }
+
+    .bot-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .online-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--status-green);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--status-green);
+    }
+
+    /* Overview Section */
+    .dashboard-card {
+      background: var(--navy-800);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(11, 19, 41, 0.2);
+    }
+
+    .search-bar {
+      width: 100%;
+      background: var(--navy-900);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      color: #fff;
+      font-size: 13.5px;
+      font-family: inherit;
+      outline: none;
+      margin-bottom: 16px;
+    }
+
+    .search-bar:focus {
+      border-color: var(--periwinkle);
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 14px;
+      background: var(--periwinkle);
+      border-radius: 2px;
+    }
+
+    /* Clean 4x4 Grid */
+    .tiles-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .tiles-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 640px) {
+      .tiles-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 400px) {
+      .tiles-grid { grid-template-columns: 1fr; }
+    }
+
+    .tile {
+      background: var(--navy-700);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 4px;
+      user-select: none;
+      min-height: 70px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .tile:hover {
+      background: var(--navy-600);
+      border-color: var(--border-hover);
+    }
+
+    .tile:active {
+      transform: translateY(1px);
+    }
+
+    .tile-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tile-desc {
+      font-size: 11px;
+      color: var(--text-gray);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .tile-desc .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--status-green);
+      flex-shrink: 0;
+    }
+
+    /* Standard Clean Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(11, 19, 41, 0.7);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-box {
+      background: var(--navy-800);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 520px;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 20px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .modal-top h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-gray);
+      font-size: 16px;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .close-btn:hover {
+      color: #fff;
+    }
+
+    /* Form Fields */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-gray);
+      text-transform: uppercase;
+    }
+
+    .form-input {
+      background: var(--navy-900);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 9px 12px;
+      color: #fff;
+      font-size: 13.5px;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--periwinkle);
+    }
+
+    .modal-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .btn-main {
+      background: var(--periwinkle);
+      color: var(--navy-900);
+    }
+
+    .btn-main:hover {
+      background: #cdd9ff;
+    }
+
+    .btn-subtle {
+      background: var(--navy-700);
+      color: #fff;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .btn-subtle:hover {
+      background: var(--navy-600);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.3);
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      background: var(--navy-900);
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      background: var(--navy-900);
+      color: #fff;
+      border: 1px solid var(--border-hover);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      font-size: 12.5px;
+      font-weight: 700;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 9999;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Static Background Shapes -->
+  <div class="bg-shape-container">
+    <img src="assets/bg-shape1.png" class="bg-shape shape-top-right" alt="">
+    <img src="assets/bg-shape2.png" class="bg-shape shape-bottom-left" alt="">
+  </div>
+
+  <div class="container">
+
+    <!-- Compact Top Banner -->
+    <div class="banner-card">
+      <img src="assets/banner.png" class="banner-img" alt="System Bot Banner">
+      <div class="banner-footer">
+        <div class="bot-info">
+          <img id="headerAvatar" src="assets/bg-shape1.png" class="bot-pfp" alt="">
+          <span id="headerTag" class="bot-name">System Bot</span>
+          <span class="online-badge"><span class="status-dot"></span> Online</span>
+        </div>
+        <div>
+          <select id="guildSelector" class="form-input" onchange="switchGuild(this.value)" style="padding: 4px 8px; font-size: 12px;">
+            <option value="">Loading...</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Dashboard Grid -->
+    <div class="dashboard-card">
+
+      <input type="text" id="tileFilterInput" class="search-bar" placeholder="Search features..." oninput="filterTiles(this.value)">
+
+      <div class="section-title">Overview</div>
+
+      <div id="tilesContainer" class="tiles-grid">
+        
+        <!-- Tickets -->
+        <div class="tile" onclick="openModal('tickets')">
+          <div class="tile-name">🎟️ Tickets</div>
+          <div class="tile-desc" id="statusTickets"><span class="dot"></span> Support categories</div>
+        </div>
+
+        <!-- Welcome -->
+        <div class="tile" onclick="openModal('welcome')">
+          <div class="tile-name">💬 Welcome messages</div>
+          <div class="tile-desc" id="statusWelcome"><span class="dot"></span> On → #welcome</div>
+        </div>
+
+        <!-- Auto-join roles -->
+        <div class="tile" onclick="openModal('autorole')">
+          <div class="tile-name">🧑‍🤝‍🧑 Auto-join roles</div>
+          <div class="tile-desc" id="statusAutorole"><span class="dot"></span> Newcomer role</div>
+        </div>
+
+        <!-- Giveaways -->
+        <div class="tile" onclick="openModal('giveaways')">
+          <div class="tile-name">🎁 Giveaways</div>
+          <div class="tile-desc" id="statusGiveaways"><span class="dot"></span> Host giveaway</div>
+        </div>
+
+        <!-- Polls -->
+        <div class="tile" onclick="openModal('polls')">
+          <div class="tile-name">📊 Polls</div>
+          <div class="tile-desc" id="statusPolls"><span class="dot"></span> Post a poll</div>
+        </div>
+
+        <!-- Purge Messages -->
+        <div class="tile" onclick="openModal('purge')">
+          <div class="tile-name">🧹 Purge messages</div>
+          <div class="tile-desc"><span class="dot"></span> Clear 1-100 messages</div>
+        </div>
+
+        <!-- Embed Sender -->
+        <div class="tile" onclick="openModal('embeds')">
+          <div class="tile-name">📝 Embed sender</div>
+          <div class="tile-desc"><span class="dot"></span> Broadcast embed</div>
+        </div>
+
+        <!-- Birthdays -->
+        <div class="tile" onclick="openModal('birthdays')">
+          <div class="tile-name">⭐ Birthdays</div>
+          <div class="tile-desc" id="statusBirthdays"><span class="dot"></span> Announcements & role</div>
+        </div>
+
+        <!-- Counting -->
+        <div class="tile" onclick="openModal('counting')">
+          <div class="tile-name">🔢 Counting</div>
+          <div class="tile-desc" id="statusCounting"><span class="dot"></span> Active</div>
+        </div>
+
+        <!-- Server Stats -->
+        <div class="tile" onclick="openModal('stats')">
+          <div class="tile-name">📈 Server stats</div>
+          <div class="tile-desc" id="statusStats"><span class="dot"></span> Voice counters</div>
+        </div>
+
+        <!-- Temp Voice -->
+        <div class="tile" onclick="openModal('voice')">
+          <div class="tile-name">🔊 Temp channels</div>
+          <div class="tile-desc" id="statusVoice"><span class="dot"></span> Join-To-Create</div>
+        </div>
+
+        <!-- Honeypot -->
+        <div class="tile" onclick="openModal('honeypot')">
+          <div class="tile-name">🛡️ Honeypot security</div>
+          <div class="tile-desc" id="statusHoneypot"><span class="dot"></span> Anti-raid trap</div>
+        </div>
+
+        <!-- Audit Logging -->
+        <div class="tile" onclick="openModal('logs')">
+          <div class="tile-name">⚡ Audit logging</div>
+          <div class="tile-desc"><span class="dot"></span> SERVER LOGS</div>
+        </div>
+
+        <!-- AI Chatbot -->
+        <div class="tile" onclick="openModal('ai')">
+          <div class="tile-name">🤖 AI Chatbot</div>
+          <div class="tile-desc" id="statusAi"><span class="dot"></span> Dedicated channel</div>
+        </div>
+
+        <!-- Minigames -->
+        <div class="tile" onclick="openModal('minigames')">
+          <div class="tile-name">🎲 Minigames</div>
+          <div class="tile-desc" id="statusMinigames"><span class="dot"></span> Channel restriction</div>
+        </div>
+
+        <!-- Server Events -->
+        <div class="tile" onclick="openModal('events')">
+          <div class="tile-name">🎮 Events</div>
+          <div class="tile-desc" id="statusEvents"><span class="dot"></span> Host & manage events</div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Standard Modal Window -->
+  <div id="modalOverlay" class="modal-overlay" onclick="closeModalOnBackdrop(event)">
+    <div class="modal-box">
+      <div class="modal-top">
+        <h3 id="modalHeading">Settings</h3>
+        <button class="close-btn" onclick="hideModal()">✕</button>
+      </div>
+
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <div id="toastMessage" class="toast">Saved</div>
+
+  <script>
+    let guildsCache = [];
+    let activeGuildId = null;
+    let guildConfigCache = {};
+    let liveMetrics = {};
+
+    function filterTiles(text) {
+      const q = text.toLowerCase().trim();
+      document.querySelectorAll('.tile').forEach(t => {
+        t.style.display = t.textContent.toLowerCase().includes(q) ? 'flex' : 'none';
+      });
+    }
+
+    function popToast(msg) {
+      const t = document.getElementById('toastMessage');
+      t.textContent = msg;
+      t.className = 'toast show';
+      setTimeout(() => { t.className = 'toast'; }, 2500);
+    }
+
+    function hideModal() {
+      document.getElementById('modalOverlay').classList.remove('open');
+    }
+
+    function closeModalOnBackdrop(e) {
+      if (e.target.id === 'modalOverlay') hideModal();
+    }
+
+    async function syncData() {
+      try {
+        const [stats, guilds, giveaways, polls, bdays, reminders, events] = await Promise.all([
+          fetch('/api/status').then(r => r.json()),
+          fetch('/api/guilds').then(r => r.json()),
+          fetch('/api/giveaways').then(r => r.json()),
+          fetch('/api/polls').then(r => r.json()),
+          fetch('/api/birthdays').then(r => r.json()),
+          fetch('/api/reminders').then(r => r.json()),
+          fetch('/api/events').then(r => r.json())
+        ]);
+
+        liveMetrics = { stats, giveaways, polls, bdays, reminders, events };
+        guildsCache = guilds;
+
+        if (stats.avatar) document.getElementById('headerAvatar').src = stats.avatar;
+        if (stats.tag) document.getElementById('headerTag').textContent = stats.tag.split('#')[0];
+
+        const sel = document.getElementById('guildSelector');
+        sel.innerHTML = '';
+        guilds.forEach(g => {
+          const opt = document.createElement('option');
+          opt.value = g.id;
+          opt.textContent = g.name;
+          sel.appendChild(opt);
+        });
+
+        if (guilds.length > 0 && !activeGuildId) {
+          activeGuildId = guilds[0].id;
+          sel.value = activeGuildId;
+          await loadGuildConfig(activeGuildId);
+        } else if (activeGuildId) {
+          sel.value = activeGuildId;
+          await loadGuildConfig(activeGuildId);
+        }
+
+        const activeG = (giveaways || []).filter(x => !x.ended);
+        const activeE = (events || []).filter(x => !x.ended);
+        document.getElementById('statusGiveaways').innerHTML = `<span class="dot"></span> ${activeG.length} running`;
+        document.getElementById('statusEvents').innerHTML = `<span class="dot"></span> ${activeE.length} active`;
+        document.getElementById('statusBirthdays').innerHTML = `<span class="dot"></span> ${Object.keys(bdays || {}).length} saved`;
+
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function switchGuild(gId) {
+      activeGuildId = gId;
+      await loadGuildConfig(gId);
+    }
+
+    async function loadGuildConfig(gId) {
+      try {
+        const res = await fetch(`/api/config/${gId}`).then(r => r.json());
+        guildConfigCache = res.config || {};
+
+        const g = guildsCache.find(x => x.id === gId);
+        if (!g) return;
+
+        const chanName = (id) => {
+          const c = g.channels.find(x => x.id === id);
+          return c ? `#${c.name}` : 'None';
+        };
+
+        document.getElementById('statusWelcome').innerHTML = `<span class="dot"></span> ${guildConfigCache.welcomeChannelId ? `On → ${chanName(guildConfigCache.welcomeChannelId)}` : 'Disabled'}`;
+        document.getElementById('statusCounting').innerHTML = `<span class="dot"></span> ${guildConfigCache.countingChannelId ? `On → ${chanName(guildConfigCache.countingChannelId)}` : 'Disabled'}`;
+        document.getElementById('statusHoneypot').innerHTML = `<span class="dot"></span> ${guildConfigCache.honeypotChannelId ? `Trap → ${chanName(guildConfigCache.honeypotChannelId)}` : 'Off'}`;
+        document.getElementById('statusAi').innerHTML = `<span class="dot"></span> ${guildConfigCache.aiChannelId ? `${chanName(guildConfigCache.aiChannelId)}` : 'All channels'}`;
+
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function openModal(type) {
+      const g = guildsCache.find(x => x.id === activeGuildId);
+      if (!g) return;
+
+      const textChans = g.channels.filter(c => c.type === 0);
+      const catChans = g.channels.filter(c => c.type === 4);
+      const voiceChans = g.channels.filter(c => c.type === 2);
+      const roles = g.roles;
+
+      const makeSelect = (id, items, currentVal) => `
+        <select id="${id}" class="form-input">
+          <option value="">-- None / Disabled --</option>
+          ${items.map(i => `<option value="${i.id}" ${i.id === currentVal ? 'selected' : ''}>${i.name}</option>`).join('')}
+        </select>
+      `;
+
+      let heading = '';
+      let html = '';
+
+      if (type === 'tickets') {
+        heading = '🎟️ Tickets';
+        html = `
+          <div class="form-group">
+            <label>Ticket Category</label>
+            ${makeSelect('modTicketCat', catChans, guildConfigCache.ticketCategoryId)}
+          </div>
+          <div class="form-group">
+            <label>Staff Role</label>
+            ${makeSelect('modTicketStaff', roles, guildConfigCache.ticketStaffRoleId)}
+          </div>
+          <div class="modal-bottom">
+            <button class="btn btn-subtle" onclick="autoCreate('tickets')">✨ Auto-Create Category</button>
+            <button class="btn btn-main" onclick="savePatch({ ticketCategoryId: getVal('modTicketCat'), ticketStaffRoleId: getVal('modTicketStaff') })">Save</button>
+          </div>
+        `;
+      } else if (type === 'welcome') {
+        heading = '💬 Welcome Messages';
+        html = `
+          <div class="form-group">
+            <label>Welcome Channel</label>
+            ${makeSelect('modWelcomeChan', textChans, guildConfigCache.welcomeChannelId)}
+          </div>
+          <div class="modal-bottom">
+            <button class="btn btn-danger" onclick="savePatch({ welcomeChannelId: null })">Disable</button>
+            <button class="btn btn-main" onclick="savePatch({ welcomeChannelId: getVal('modWelcomeChan') })">Save</button>
+          </div>
+        `;
+      } else if (type === 'autorole') {
+        heading = '🧑‍🤝‍🧑 Auto-Join Roles';
+        html = `
+          <div class="form-group">
+            <label>Newcomer Role</label>
+            ${makeSelect('modAutoRole', roles, guildConfigCache.welcomeRoleId)}
+          </div>
+          <div class="modal-bottom">
+            <button class="btn btn-danger" onclick="savePatch({ welcomeRoleId: null })">Disable</button>
+            <button class="btn btn-main" onclick="savePatch({ welcomeRoleId: getVal('modAutoRole') })">Save</button>
+          </div>
+        `;
+      } else if (type === 'giveaways') {
+        heading = '🎁 Host a Giveaway';
+        const running = (liveMetrics.giveaways || []).filter(x => !x.ended);
+        html = `
+          <div class="form-group">
+            <label>Channel</label>
+            ${makeSelect('gwChan', textChans, '')}
+          </div>
+          <div class="form-group">
+            <label>Prize</label>
+            <input type="text" id="gwPrize" class="form-input" placeholder="Prize">
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div class="form-group">
+              <label>Duration</label>
+              <input type="text" id="gwDuration" class="form-input" value="1h">
+            </div>
+            <div class="form-group">
+              <label>Winner Count</label>
+              <input type="number" id="gwWinners" class="form-input" value="1" min="1">
+            </div>
+          </div>
+          <button class="btn btn-main" style="width:100%; margin-top:4px;" onclick="startGiveaway()">Start Giveaway</button>
+
+          ${running.length > 0 ? `
+            <div style="margin-top:14px; border-top:1px solid var(--border-subtle); padding-top:10px;">
+              <label style="font-size:11px; font-weight:700; color:var(--text-gray); text-transform:uppercase;">Active Giveaways:</label>
+              <div style="display:flex; flex-direction:column; gap:6px; margin-top:6px;">
+                ${running.map(g => `
+                  <div style="background:var(--navy-900); border:1px solid var(--border-subtle); padding:8px 10px; border-radius:var(--radius-sm); display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                      <div style="font-weight:700; color:#fff; font-size:12.5px;">🎁 ${g.prize}</div>
+                      <div style="font-size:11px; color:var(--text-gray);">Ends: ${new Date(g.endsAt).toLocaleTimeString()}</div>
+                    </div>
+                    <button class="btn btn-danger" style="padding:3px 8px; font-size:11px;" onclick="endGiveaway('${g.messageId}')">End</button>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          ` : ''}
+        `;
+      } else if (type === 'polls') {
+        heading = '📊 Post a Poll';
+        html = `
+          <div class="form-group">
+            <label>Channel</label>
+            ${makeSelect('pollChan', textChans, '')}
+          </div>
+          <div class="form-group">
+            <label>Question</label>
+            <input type="text" id="pollQuestion" class="form-input" placeholder="Question">
+          </div>
+          <div class="modal-bottom">
+            <button class="btn btn-main" onclick="postPoll()">Post Poll</button>
+          </div>
+        `;
+      } else if (type === 'purge') {
+        heading = '🧹 Purge Messages';
+        html = `
+          <div class="form-group">
+            <label>Channel</label>
+            ${makeSelect('purgeChan', textChans, '')}
+          </div>
+          <div class="form-group">
+            <label>Amount (1 - 100)</label>
+            <input type="number" id="purgeCount" class="form-input" value="10" min="1" max="100">
+          </div>
+          <div class="modal-bottom">
+            <button class="btn btn-danger" onclick="doPurge()">Delete Messages</button>
+          </div>
+        `;
+      } else if (type === 'birthdays') {
+        heading = '⭐ Birthdays Calendar';
+        html = `
+          <div class="form-group">
+            <label>Announcement Channel</label>
+            ${makeSelect('modBdayChan', textChans, guildConfigCache.birthdayChannelId)}
+          </div>
+          <div class="form-group">
+            <label>Birthday Role</label>
+            ${makeSelect('modBdayRole', roles, guildConfigCache.birthdayRoleId)}
+          </div>
+          <div class="modal-bottom">
+            <button class="btn btn-subtle" onclick="autoCreate('birthdays')">✨ Auto-Create Channel & Role</button>
+            <button class="btn btn-main" onclick="savePatch({ birthdayChannelId: getVal('modBdayChan'), birthdayRoleId: getVal('modBdayRole') })">Save</button>
+          </div>
+        `;
+      } else if (type === 'counting') {
+        heading = '🔢 Counting Game';
+        html = `
+          <div class="form-group">
+            <label>Channel</label>
+            ${makeSelect('modCountingChan', textChans, guildConfigCache.countingChannelId)}
+          </div>
+          <div class="form-group">
+            <label>Mode</label>
+            <select id="modCountingMode" class="form-input">
+              <option value="easy" ${guildConfigCache.countingMode === 'easy' ? 'selected' : ''}>Easy (Auto-deletes errors, no reset)</option>
+              <option value="hard" ${guildConfigCache.countingMode === 'hard' ? 'selected' : ''}>Hard (Resets to 0 on error)</option>
+            </select>
+          </div>
+          <div class="modal-bottom">
+            <button class="btn btn-danger" onclick="resetCounting()">Reset Score to 0</button>
+            <button class="btn btn-main" onclick="savePatch({ countingChannelId: getVal('modCountingChan'), countingMode: getVal('modCountingMode') })">Save</button>
+          </div>
+        `;
+      } else if (type === 'stats') {
+        heading = '📈 Server Stats Counters';
+        html = `
+          <div class="form-group">
+            <label>Members Voice Channel</label>
+            ${makeSelect('modStatsMember', voiceChans, guildConfigCache.statsMemberChannelId)}
+          </div>
+          <div class="form-group">
+            <label>Online Voice Channel</label>
+            ${makeSelect('modStatsOnline', voiceChans, guildConfigCache.statsOnlineChannelId)}
+          </div>
+          <div class="modal-bottom">
+            <button class="btn btn-subtle" onclick="autoCreate('stats')">✨ Auto-Create Counters</button>
+            <button class="btn btn-main" onclick="savePatch({ statsMemberChannelId: getVal('modStatsMember'), statsOnlineChannelId: getVal('modStatsOnline') })">Save</button>
+          </div>
+        `;
+      } else if (type === 'voice') {
+        heading = '🔊 Join-To-Create Voice';
+        html = `
+          <div class="form-group">
+            <label>Trigger Voice Channel</label>
+            ${makeSelect('modVoiceTrigger', voiceChans, guildConfigCache.tempVoiceTriggerId)}
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            ${makeSelect('modVoiceCat', catChans, guildConfigCache.tempVoiceCategoryId)}
+          </div>
+          <div class="modal-bottom">
+            <button class="btn btn-subtle" onclick="autoCreate('voice')">✨ Auto-Create</button>
+            <button class="btn btn-main" onclick="savePatch({ tempVoiceTriggerId: getVal('modVoiceTrigger'), tempVoiceCategoryId: getVal('modVoiceCat') })">Save</button>
+          </div>
+        `;
+      } else if (type === 'honeypot') {
+        heading = '🛡️ Honeypot Anti-Raid';
+        html = `
+          <div class="form-group">
+            <label>Trap Channel</label>
+            ${makeSelect('modHoneyChan', textChans, guildConfigCache.honeypotChannelId)}
+          </div>
+          <div class="form-group">
+            <label>Action</label>
+            <select id="modHoneyAction" class="form-input">
+              <option value="ban" ${guildConfigCache.honeypotAction === 'ban' ? 'selected' : ''}>Ban</option>
+              <option value="kick" ${guildConfigCache.honeypotAction === 'kick' ? 'selected' : ''}>Kick</option>
+              <option value="timeout" ${guildConfigCache.honeypotAction === 'timeout' ? 'selected' : ''}>Timeout (24h)</option>
+            </select>
+          </div>
+          <div class="modal-bottom">
+            <button class="btn btn-danger" onclick="savePatch({ honeypotChannelId: null })">Disable</button>
+            <button class="btn btn-main" onclick="savePatch({ honeypotChannelId: getVal('modHoneyChan'), honeypotAction: getVal('modHoneyAction') })">Save</button>
+          </div>
+        `;
+      } else if (type === 'logs') {
+        heading = '⚡ Audit Logging';
+        const logChans = guildConfigCache.logChannelIds || {};
+        const toggles = guildConfigCache.logToggles || {};
+        
+        html = `
+          <div class="form-group">
+            <label>Mod Logs Channel</label>
+            ${makeSelect('logModChan', textChans, logChans.modLogsId)}
+          </div>
+          <div class="form-group">
+            <label>Message Logs Channel</label>
+            ${makeSelect('logMsgChan', textChans, logChans.messageLogsId)}
+          </div>
+          
+          <div class="form-group">
+            <label>Event Toggles</label>
+            <div class="checkbox-grid">
+              <label class="checkbox-label"><input type="checkbox" id="tog_msg_del" ${toggles.log_message_delete !== false ? 'checked' : ''}> Message Deletes</label>
+              <label class="checkbox-label"><input type="checkbox" id="tog_msg_edit" ${toggles.log_message_edit !== false ? 'checked' : ''}> Message Edits</label>
+              <label class="checkbox-label"><input type="checkbox" id="tog_mem_join" ${toggles.log_member_join !== false ? 'checked' : ''}> Member Joins</label>
+              <label class="checkbox-label"><input type="checkbox" id="tog_mem_leave" ${toggles.log_member_leave !== false ? 'checked' : ''}> Member Leaves</label>
+              <label class="checkbox-label"><input type="checkbox" id="tog_mem_ban" ${toggles.log_member_ban !== false ? 'checked' : ''}> Bans / Kicks</label>
+              <label class="checkbox-label"><input type="checkbox" id="tog_voice" ${toggles.log_voice_join !== false ? 'checked' : ''}> Voice Moves</label>
+            </div>
+          </div>
+
+          <div class="modal-bottom">
+            <button class="btn btn-subtle" onclick="autoCreate('logs')">✨ Auto-Create Category</button>
+            <button class="btn btn-main" onclick="saveAuditLogs()">Save</button>
+          </div>
+        `;
+      } else if (type === 'ai') {
+        heading = '🤖 AI Chatbot';
+        html = `
+          <div class="form-group">
+            <label>Dedicated Channel (Blank = all channels)</label>
+            ${makeSelect('modAiChan', textChans, guildConfigCache.aiChannelId)}
+          </div>
+          <div class="modal-bottom">
+            <button class="btn btn-danger" onclick="savePatch({ aiChannelId: null })">All Channels</button>
+            <button class="btn btn-main" onclick="savePatch({ aiChannelId: getVal('modAiChan') })">Save</button>
+          </div>
+        `;
+      } else if (type === 'minigames') {
+        heading = '🎲 Minigames Channel';
+        html = `
+          <div class="form-group">
+            <label>Restricted Channel</label>
+            ${makeSelect('modMiniChan', textChans, guildConfigCache.minigameChannelId)}
+          </div>
+          <div class="modal-bottom">
+            <button class="btn btn-danger" onclick="savePatch({ minigameChannelId: null })">Any Channel</button>
+            <button class="btn btn-main" onclick="savePatch({ minigameChannelId: getVal('modMiniChan') })">Save</button>
+          </div>
+        `;
+      } else if (type === 'embeds') {
+        heading = '📝 Broadcast Embed';
+        html = `
+          <div class="form-group">
+            <label>Channel</label>
+            ${makeSelect('embChan', textChans, '')}
+          </div>
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" id="embTitle" class="form-input" placeholder="Title">
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea id="embDesc" class="form-input" rows="3" placeholder="Message content"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Color</label>
+            <input type="color" id="embColor" class="form-input" value="#B4C6FF" style="height:36px; padding:2px;">
+          </div>
+          <div class="modal-bottom">
+            <button class="btn btn-main" onclick="sendEmbed()">Broadcast to Discord</button>
+          </div>
+        `;
+      } else if (type === 'events') {
+        heading = '🎮 Server Events';
+        const activeEvents = (liveMetrics.events || []).filter(x => !x.ended);
+        html = `
+          <div class="form-group">
+            <label>Channel</label>
+            ${makeSelect('evChan', textChans, '')}
+          </div>
+          <div class="form-group">
+            <label>Event Title</label>
+            <input type="text" id="evTitle" class="form-input" placeholder="Event Title">
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="evDesc" class="form-input" rows="2" placeholder="Description"></textarea>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div class="form-group">
+              <label>Game / Activity</label>
+              <input type="text" id="evGame" class="form-input" placeholder="Game Name">
+            </div>
+            <div class="form-group">
+              <label>Time / Schedule</label>
+              <input type="text" id="evSchedule" class="form-input" placeholder="Time">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Join Link (Optional)</label>
+            <input type="url" id="evLink" class="form-input" placeholder="https://...">
+          </div>
+          <button class="btn btn-main" style="width:100%; margin-top:4px;" onclick="startEvent()">Post Event</button>
+
+          ${activeEvents.length > 0 ? `
+            <div style="margin-top:14px; border-top:1px solid var(--border-subtle); padding-top:10px;">
+              <label style="font-size:11px; font-weight:700; color:var(--text-gray); text-transform:uppercase;">Active Events:</label>
+              <div style="display:flex; flex-direction:column; gap:6px; margin-top:6px;">
+                ${activeEvents.map(ev => `
+                  <div style="background:var(--navy-900); border:1px solid var(--border-subtle); padding:8px 10px; border-radius:var(--radius-sm); display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                      <div style="font-weight:700; color:#fff; font-size:12.5px;">🎮 ${ev.title}</div>
+                      <div style="font-size:11px; color:var(--text-gray);">${ev.schedule ? `⏰ ${ev.schedule}` : ''} • ${(ev.participants || []).length} Joined</div>
+                    </div>
+                    <button class="btn btn-danger" style="padding:3px 8px; font-size:11px;" onclick="endEventNow('${ev.messageId}')">End Event</button>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          ` : ''}
+        `;
+      }
+
+      document.getElementById('modalHeading').textContent = heading;
+      document.getElementById('modalContent').innerHTML = html;
+      document.getElementById('modalOverlay').classList.add('open');
+    }
+
+    function getVal(id) {
+      const el = document.getElementById(id);
+      return el ? (el.value || null) : null;
+    }
+
+    async function savePatch(patch) {
+      if (!activeGuildId) return;
+      try {
+        const res = await fetch(`/api/config/${activeGuildId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(patch)
+        }).then(r => r.json());
+
+        if (res.success) {
+          popToast('Saved settings');
+          hideModal();
+          await syncData();
+        }
+      } catch (e) {
+        popToast('Error saving');
+      }
+    }
+
+    async function autoCreate(mod) {
+      if (!activeGuildId) return;
+      popToast('Auto-creating on Discord...');
+      try {
+        const res = await fetch(`/api/autocreate/${activeGuildId}/${mod}`, { method: 'POST' }).then(r => r.json());
+        if (res.success) {
+          popToast('Created successfully');
+          hideModal();
+          await syncData();
+        }
+      } catch (e) {
+        popToast('Error creating');
+      }
+    }
+
+    async function resetCounting() {
+      if (!activeGuildId) return;
+      try {
+        await fetch(`/api/reset-counting/${activeGuildId}`, { method: 'POST' });
+        popToast('Score reset to 0');
+        hideModal();
+      } catch (e) {}
+    }
+
+    async function startGiveaway() {
+      const channelId = getVal('gwChan');
+      const prize = getVal('gwPrize');
+      const duration = getVal('gwDuration');
+      const winnerCount = getVal('gwWinners');
+
+      if (!channelId || !prize) return popToast('Pick channel & prize');
+
+      try {
+        const res = await fetch('/api/create-giveaway', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ channelId, prize, duration, winnerCount })
+        }).then(r => r.json());
+
+        if (res.success) {
+          popToast('Giveaway started');
+          hideModal();
+          await syncData();
+        }
+      } catch (e) {
+        popToast('Failed to start');
+      }
+    }
+
+    async function endGiveaway(msgId) {
+      try {
+        await fetch('/api/end-giveaway', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messageId: msgId })
+        });
+        popToast('Giveaway ended');
+        hideModal();
+        await syncData();
+      } catch (e) {}
+    }
+
+    async function postPoll() {
+      const channelId = getVal('pollChan');
+      const question = getVal('pollQuestion');
+
+      if (!channelId || !question) return popToast('Pick channel & question');
+
+      try {
+        const res = await fetch('/api/create-poll', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ channelId, question })
+        }).then(r => r.json());
+
+        if (res.success) {
+          popToast('Poll posted');
+          hideModal();
+          await syncData();
+        }
+      } catch (e) {
+        popToast('Failed to post');
+      }
+    }
+
+    async function doPurge() {
+      const channelId = getVal('purgeChan');
+      const amount = getVal('purgeCount');
+
+      if (!channelId) return popToast('Select a channel');
+
+      try {
+        const res = await fetch('/api/purge-messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ channelId, amount })
+        }).then(r => r.json());
+
+        if (res.success) {
+          popToast(`Deleted ${res.count} messages`);
+          hideModal();
+        }
+      } catch (e) {
+        popToast('Purge failed');
+      }
+    }
+
+    async function saveAuditLogs() {
+      const logChannelIds = {
+        modLogsId: getVal('logModChan'),
+        messageLogsId: getVal('logMsgChan')
+      };
+
+      const logToggles = {
+        log_message_delete: document.getElementById('tog_msg_del').checked,
+        log_message_edit: document.getElementById('tog_msg_edit').checked,
+        log_member_join: document.getElementById('tog_mem_join').checked,
+        log_member_leave: document.getElementById('tog_mem_leave').checked,
+        log_member_ban: document.getElementById('tog_mem_ban').checked,
+        log_voice_join: document.getElementById('tog_voice').checked
+      };
+
+      await savePatch({ logChannelIds, logToggles });
+    }
+
+    async function sendEmbed() {
+      const channelId = getVal('embChan');
+      const title = getVal('embTitle');
+      const description = getVal('embDesc');
+      const color = getVal('embColor');
+
+      if (!channelId || (!title && !description)) return popToast('Enter channel & message');
+
+      try {
+        const res = await fetch('/api/send-embed', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ channelId, title, description, color })
+        }).then(r => r.json());
+
+        if (res.success) {
+          popToast('Broadcast sent');
+          hideModal();
+        }
+      } catch (e) {
+        popToast('Error sending');
+      }
+    }
+
+    async function startEvent() {
+      const channelId = getVal('evChan');
+      const title = getVal('evTitle');
+      const description = getVal('evDesc');
+      const game = getVal('evGame');
+      const schedule = getVal('evSchedule');
+      const link = getVal('evLink');
+
+      if (!channelId || !title) return popToast('Pick a channel & enter title');
+
+      try {
+        const res = await fetch('/api/create-event', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ channelId, title, description: description || 'Server Event', game, schedule, link })
+        }).then(r => r.json());
+
+        if (res.success) {
+          popToast('🎮 Event posted to Discord!');
+          hideModal();
+          await syncData();
+        } else {
+          popToast(`Error: ${res.error}`);
+        }
+      } catch (e) {
+        popToast('Failed to post event');
+      }
+    }
+
+    async function endEventNow(messageId) {
+      try {
+        const res = await fetch('/api/end-event', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messageId })
+        }).then(r => r.json());
+
+        if (res.success) {
+          popToast('Event ended');
+          hideModal();
+          await syncData();
+        }
+      } catch (e) {}
+    }
+
+    setInterval(syncData, 6000);
+    window.addEventListener('DOMContentLoaded', syncData);
+  </script>
+</body>
+</html>

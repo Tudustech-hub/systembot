@@ -1,0 +1,39 @@
+{
+  "name": "discord-bot",
+  "version": "1.0.0",
+  "description": "System Bot",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "start:bg": "npx pm2 start ecosystem.config.js",
+    "stop:bg": "npx pm2 stop discord-bot",
+    "restart:bg": "npx pm2 restart discord-bot",
+    "status": "npx pm2 status",
+    "logs": "npx pm2 logs discord-bot",
+    "deploy": "node src/deploy-commands.js",
+    "update": "./scripts/auto-update.sh"
+  },
+  "keywords": [
+    "discord",
+    "discord.js",
+    "bot"
+  ],
+  "author": "tudustech",
+  "license": "MIT",
+  "dependencies": {
+    "@discordjs/voice": "^0.19.2",
+    "@distube/ytdl-core": "^4.16.12",
+    "@google/genai": "^2.19.0",
+    "discord.js": "^14.15.3",
+    "dotenv": "^16.4.5",
+    "express": "^5.2.1",
+    "ffmpeg-static": "^5.3.0",
+    "libsodium-wrappers": "^0.8.4",
+    "ms": "^2.1.3",
+    "opusscript": "^0.0.8",
+    "play-dl": "^1.9.7",
+    "pm2": "^7.0.4",
+    "spotify-url-info": "^3.3.3",
+    "sqlite3": "^5.1.7"
+  }
+}
