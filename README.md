@@ -58,7 +58,6 @@ git clone https://github.com/Tudustech-hub/systembot.git
 cd systembot
 
 ### 2. Install Dependencies
-```bash
 npm install
 ```
 
