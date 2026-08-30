@@ -50,13 +50,12 @@
 
 ---
 
-## 🚀 Installation & Setup
+## 🚀 Quick Installation & Setup
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
-cd YOUR_REPO_NAME
-```
+git clone https://github.com/Tudustech-hub/systembot.git
+cd systembot
 
 ### 2. Install Dependencies
 ```bash
