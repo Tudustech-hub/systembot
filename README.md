@@ -1,5 +1,17 @@
 <div align="center">
-  <img src="src/dashboard/public/assets/animated-header.svg" alt="System Bot Animated Banner" width="100%" />
+  <img src="src/dashboard/public/assets/banner.png" alt="System Bot Banner" width="480" style="border-radius: 12px; margin-bottom: 14px;" />
+  
+  <h1>System Bot</h1>
+  <p>All-in-one Discord server management, utility & moderation bot</p>
+
+  <p>
+    <img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Javascript/javascript2.svg" alt="JavaScript" />
+    <img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/NodeJS/nodejs2.svg" alt="Node.js" />
+    <img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Discord/discord2.svg" alt="Discord" />
+    <img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/HTML/html2.svg" alt="HTML5" />
+  </p>
+
+  <p><strong>Created & Maintained by tudustech</strong></p>
 </div>
 
 ---
